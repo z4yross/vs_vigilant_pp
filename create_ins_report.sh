@@ -120,15 +120,12 @@ quastFile=$(echo "${3}/medaka/quast/genome_stats/genome_info.txt")
 
 
 # Name of the main report file to output.
-baseName=$(basename ${jsonFile})
+baseName=$(basename ${vrDir})
 reportMainFile=$(echo ${tmpDir}/${baseName}".ins_report.tsv")
 
 
 # User feed back.
-echo ""
-echo ""
-echo "Creating output file: ${reportMainFile}"
-echo ""
+saythis "Creating output file: ${reportMainFile}" "msg"
 
 # Write header in output file
 echo "Codigo:Linaje:Mutacion de interes:Delecion:Delecion(coordenadas):Inserciones:Sustituciones:Sustituciones(AA):Profundidad:Cobertura:Laboratorio" | tr ':' '\t' > ${reportMainFile}
