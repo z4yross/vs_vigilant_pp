@@ -16,16 +16,18 @@
 #
 #
 #
+#Path of this file.
+tp=$(dirname ${0})
+source $tp/vigilant.env
 
 #Import common library
-source /home/apinzon/mis_datos/GitHub/vigilant/lib/fp.sh
-
+source ${VIGILANTHOME}/lib/fp.sh
 
 #Constants
-nfBin="/usr/local/bin/nextflow-21.04.1-all"
+nfBin="${VIGILANTHOME}/bin/nextflow-21.04.1-all"
 vReconRelease="2.2"
-medakaModel="/home/apinzon/mis_datos/Analysis/20210721-vigilancia/config/r941_min_high_g360_model.hdf5"
-customConfig="/home/apinzon/mis_datos/Analysis/20210721-vigilancia/config/custom.config"
+medakaModel="${VIGILANTHOME}/viralrecon/r941_min_high_g360_model.hdf5"
+customConfig="${VIGILANTHOME}/viralrecon/custom.config"
 
 while getopts i:s:q:o: flag
 do

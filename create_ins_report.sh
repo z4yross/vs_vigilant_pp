@@ -40,7 +40,10 @@
 # IMPORTANT: Sorry not support for OSX yet in this script.
 #
 #
-source /home/apinzon/mis_datos/GitHub/vigilant/lib/fp.sh
+tp=$(dirname ${0})
+source $tp/vigilant.env
+
+source ${VIGILANTHOME}/lib/fp.sh
 #--------------------------------------------------------------------
 #
 # Minimal input check.

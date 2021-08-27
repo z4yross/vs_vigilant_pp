@@ -15,8 +15,12 @@
 #
 
 
+#Path of this file.
+tp=$(dirname ${0})
+source $tp/vigilant.env
+
 #Import common library
-source /home/apinzon/mis_datos/GitHub/vigilant/lib/fp.sh
+source ${VIGILANTHOME}/lib/fp.sh
 
 vReconResultsDir=${1}
 
@@ -25,8 +29,6 @@ vReconResultsDir=${1}
 #--------------------------------------------------------------------
 # CONSTANTS
 #--------------------------------------------------------------------
-# Esta variable la establece el instalador, aca se usa esta manual
-VIGILANTHOME="/home/apinzon/mis_datos/GitHub/vigilant"
 nextCladeBin=$(echo "${VIGILANTHOME}/bin/nextclade-Linux-x86_64")
 nextCladeFiles=$(echo "${VIGILANTHOME}/nextclade-input/")
 consFileName=$(echo "all.consensus.fasta")
