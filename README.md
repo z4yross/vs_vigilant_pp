@@ -22,11 +22,10 @@ This script requires 5 arguments:
 
 ### Sample sheet
 This is a simple text file with the following structure:
-
-sample,barcode <br>  
-sample name, 01  
-another sample, 03  
-just another sample, 07  
+`sample,barcodea <br>
+sample name, 01 <br>  
+another sample, 03   <br>
+just another sample, 07  <br>
 `
 The whole idea is that you have two colums, first one for the sample name and second one for the particular barcode that identifies that sample.
 
@@ -37,17 +36,15 @@ The -o (output) option requires a non spaces name for the output dir. This is th
 This file is required for the final step of Vigilant, the creation of the INS report.
 The idea is that for each entry in this file,  the results obtained from Nextclade are screened and if there is a coincidence the particular variant is registered in the report file. 
 This is a single column file:
+<br>
 `
-D253G  
-D614G  
-D796H  
-E484K  
-E484Q  
-E516Q  
-N501T  
-N501Y  
-N:T205I  
-...  
+D253G <br>  
+D614G  <br>
+D796H  <br>
+E484K  <br>
+E484Q  <br>
+N:T205I <br> 
+...  <br>
 `
 If this option is not provided or if empty, Vigilant will use a internal list of variants of interest/concern.
 
