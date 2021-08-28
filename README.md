@@ -23,7 +23,7 @@ This script requires 5 arguments:
 ### Sample sheet
 This is a simple text file with the following structure:
 
-`sample,barcode  
+sample,barcode <br>  
 sample name, 01  
 another sample, 03  
 just another sample, 07  
