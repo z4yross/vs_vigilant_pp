@@ -7,7 +7,12 @@
 # allow to run nf-core/viral recon plus inhouse scripts for
 # the Genomic Surveillance of human Sars-CoV2 in Colombia.
 #
-#
+# INPUT
+# -i Path to fastq_pass folder
+# -s Path to sequencing summary
+# -q Path to sample sheet
+# -o Unique name for output dir.
+# -v Path to a file containig a description of variants of interest.#
 
 
 #--------------------------------------------------------------------
@@ -65,7 +70,9 @@ ${VIGILANTHOME}/run_offline_nextclade.sh ${outDir}
 # CREATE REPORT
 #
 #--------------------------------------------------------------------
-${VIGILANTHOME}/create_ins_report.sh nextclade_output/nextclade.json ${voci} ${outDir}
+# Is important to keep the -v option at the end. If not and it is empty it 
+# will take the next argument as if it were the argument value.
+${VIGILANTHOME}/create_ins_report.sh -j nextclade_output/nextclade.json -d ${outDir} -v ${voci}
 
 
 

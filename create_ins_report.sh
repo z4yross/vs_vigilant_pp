@@ -49,50 +49,67 @@ source ${VIGILANTHOME}/lib/fp.sh
 # Minimal input check.
 #
 #--------------------------------------------------------------------
-function input_error ()
-{
-  echo -e "
-  #
-  # ** ERROR **: ${1}
-  # 
-  #  Please check that you provided  all arguments and/or paths are correct.
-  #
-  #  This script requires the following input files:
-  #
-  #  1) A JSON file as obtained from NEXTCLADE.
-  #  2) A one column file holding a list of Variants of Interest to look for.
-  #  3) Path to nf-core/viralrecon results dir.
-  #
-  #  Example:
-  #
-  #  create_ins_report.sh  [nextclade_output.json] [variants_file] [nfcore_results_dir] 
-  #
-  " 
-  exit 1
-}
+while getopts j:v:d: flag
+do
+  case "${flag}" in
+    j) jsonFile=${OPTARG};;
+    v) vocFile=${OPTARG};;
+    d) vrDir=${OPTARG};;
+   \?) echo "Missing argument value: ${OPTARG}" 1>&2;;
+    :) echo "Missing value: ${OPTARG} requires an argument " 1>&2;;
+  esac
+done
 
 #If fq is not installed just quit.
 if ! [ -x "$(command -v jq)" ]; then
-  echo 'Error:  jq is not installed. Please install it and try again.' >&2
+  saythis "Error:  jq is not installed. Please install it and try again." "error"
+fi
+
+#----------------------------------
+# VARIANTS OF INTEREST/CONCERN CHECK
+#-----------------------------------
+
+#If vocFile variable is empty, means user will use default file.
+if [ -z ${vocFile} ];then
+	saythis "WARN: Using default variants of interest file " "warn"
+	vocFile="${VIGILANTHOME}/ins_voci.lst"
+fi
+
+#If provided make sure file exists
+checkFile=$(fileexists ${vocFile})
+if [ $checkFile -eq 0 ];then
+  saythis "Error: File ${vocFile} not found. Quitting." "error"
   exit 1
 fi
 
-
-if [ -z "$3" ]; then
-  input_error "Missing argument"
-fi
- 
-if [ ! -f $1 ];then
-  input_error "File ${1} not found"
-fi  
-  
-if [ ! -f $2 ];then
-  input_error "File ${2} not found"
+#----------------------------------
+# JSONFILE CHECK
+#-----------------------------------
+if [ -z ${jsonFile} ];then
+	saythis "ERROR: JSON file not provided. Quitting. " "error"
+	exit 1
 fi
 
-if [ ! -d $3 ] || [ -z "$3" ];then
-  input_error "Viralrecon results directory ${3} not found"
+checkFile=$(fileexists ${jsonFile})
+if [ $checkFile -eq 0 ];then
+  saythis "Error: File ${jsonFile} not found. Quitting." "error"
+  exit 1
 fi
+
+#----------------------------------
+# VIRALRECON DIR CHECK
+#-----------------------------------
+if [ -z ${vrDir} ];then
+	saythis "ERROR: Viral recon results dir not provided. Quitting. " "error"
+	exit 1
+fi
+
+checkDir=$(direxists ${vrDir})
+if [ $checkDir -eq 0 ]; then
+	saythis  "ERROR: Unable to find $vrDir. Make sure directory exist. Quitting." "error"
+	exit 1
+fi
+
 
 
 
@@ -108,15 +125,10 @@ fi
 tmpDir=$(mktemp -d -p ./)
 
 
-
-jsonFile=${1}
-vocFile=${2}
-
 #This 2 dirs come from the last (third) parameter: path to viralrecon results dir.
 #realpath removes trailng "/"
-vrDir=$(realpath ${3})
-mosDir=$(echo "${3}/medaka/mosdepth/genome/")
-quastFile=$(echo "${3}/medaka/quast/genome_stats/genome_info.txt")
+mosDir=$(echo "${vrDir}/medaka/mosdepth/genome/")
+quastFile=$(echo "${vrDir}/medaka/quast/genome_stats/genome_info.txt")
 
 
 # Name of the main report file to output.
@@ -125,7 +137,7 @@ reportMainFile=$(echo ${tmpDir}/${baseName}".ins_report.tsv")
 
 
 # User feed back.
-saythis "Creating output file: ${reportMainFile}" "msg"
+#saythis "Creating output file: ${reportMainFile}" "msg"
 
 # Write header in output file
 echo "Codigo:Linaje:Mutacion de interes:Delecion:Delecion(coordenadas):Inserciones:Sustituciones:Sustituciones(AA):Profundidad:Cobertura:Laboratorio" | tr ':' '\t' > ${reportMainFile}
@@ -341,5 +353,6 @@ rm -Rf ${tmpDir}
 #Clean exit
 set GREP_OPTIONS
 
-saythis "Report created succesfully. Bye." "success"
+r=$(basename ${reportMainFile})
+saythis "Report: ${r} created succesfully. Bye." "success"
 exit 0

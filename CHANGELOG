@@ -1,0 +1,4 @@
+2021/09/01
+*Added support for command line arguments (-j -v -d) to create_ins_report.sh
+*Added general input control check for create_ins_report script.
+*If -v (variants of interest file) is ommited the a default ins_voci.lst file is used.
