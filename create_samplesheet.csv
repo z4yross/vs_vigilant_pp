@@ -1,0 +1,18 @@
+#!/bin/bash
+
+ls ${1} | cat > TMPFILE
+sed -i 's/barcode//g' TMPFILE
+sed -i 's/unclassified//g' TMPFILE
+sed -i '/^$/d' TMPFILE
+
+readarray -t a < TMPFILE 
+
+echo "sample,barcode" > samplesheet.csv
+
+for i in "${a[@]}"
+do
+ echo "UNAL-${i},${i}" >> samplesheet.csv
+done
+
+
+

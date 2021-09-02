@@ -62,6 +62,18 @@ ${VIGILANTHOME}/run_viralrecon.sh \
 # RUN NEXTCLADE 
 #
 #--------------------------------------------------------------------
+
+# Before running this, check that Medaka directory was created.
+# Sometimes it just runs pycoqc but due to bad quality it is not able to run
+# Medaka's downstream analysis. 
+
+medakaDir=$(echo "${outDir}/medaka")
+checkDir=$(direxists ${medakaDir})
+if [ $checkDir -eq 0 ]; then
+	saythis "ERROR: Unable to find directory: \"${medakaDir}\". Maybe wrong path?." "error"
+	exit 1
+fi
+
 ${VIGILANTHOME}/run_offline_nextclade.sh ${outDir} 
 
 
