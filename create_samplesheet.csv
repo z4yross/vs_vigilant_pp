@@ -1,10 +1,21 @@
 #!/bin/bash
 
+# Read directory that comes as argument 1
+# This directory contains a bunch of subdirs in the form of:
+# barcode1/
+# barcode2/
+# barcoden/
+
+
+
+
 ls ${1} | cat > TMPFILE
 sed -i 's/barcode//g' TMPFILE
+#Unclassified directory is not parsed
 sed -i 's/unclassified//g' TMPFILE
 sed -i '/^$/d' TMPFILE
 
+#Populate arrary "a" with directory contents
 readarray -t a < TMPFILE 
 
 echo "sample,barcode" > samplesheet.csv

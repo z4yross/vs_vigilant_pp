@@ -19,3 +19,9 @@ in the spreadsheet.
 
 == Map OMS names to Pangolin names==
 Having a map table would help
+
+
+==== HEADER FASTA IDEAL ==
+
+hCoV-19/Colombia/Dpto/ciudad/internalcode/Genre/Date
+
