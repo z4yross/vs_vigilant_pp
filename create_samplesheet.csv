@@ -7,23 +7,24 @@
 # barcoden/
 
 
+#
+sampleSheet="samplesheet.csv"
+
+#create samplesheet
+echo "sample,barcode" > $sampleSheet
+
+while read line;do
+
+  #Some entries are not valid. Barcode has to be numeric
+  	#read SampleID and Barcode
+ sampleid=$(echo ${line} | awk '{print $1}')
+ barcode=$(echo ${line} | awk '{print $2}')
+ 
+ #If barcode or Sample ID are NOT empty
+  if [ -n "${barcode}" ];then
+
+ 	 printf "hCoV-19/Colombia/${sampleid},${barcode}\n" >> $sampleSheet
+  fi
 
 
-ls ${1} | cat > TMPFILE
-sed -i 's/barcode//g' TMPFILE
-#Unclassified directory is not parsed
-sed -i 's/unclassified//g' TMPFILE
-sed -i '/^$/d' TMPFILE
-
-#Populate arrary "a" with directory contents
-readarray -t a < TMPFILE 
-
-echo "sample,barcode" > samplesheet.csv
-
-for i in "${a[@]}"
-do
- echo "UNAL-${i},${i}" >> samplesheet.csv
-done
-
-
-
+done < ${1}
