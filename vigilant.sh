@@ -88,3 +88,11 @@ ${VIGILANTHOME}/create_ins_report.sh -j nextclade_output/nextclade.json -d ${out
 
 
 
+#--------------------------------------------------------------------
+#
+# Let's get Organized
+#
+#--------------------------------------------------------------------
+mv nextclade_output ${outDir}
+
+

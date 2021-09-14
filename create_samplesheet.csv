@@ -1,14 +1,28 @@
 #!/bin/bash
 
-# Read directory that comes as argument 1
-# This directory contains a bunch of subdirs in the form of:
-# barcode1/
-# barcode2/
-# barcoden/
-
-
 #
-sampleSheet="samplesheet.csv"
+# Example create_samplesheet.sh 2colfile prefix
+# 2colfile:file holding "sampleid \t barcode"
+# prefix: a unique name given to this sample sheet
+#
+
+
+#Import common library
+tp=$(dirname ${0})
+source $tp/vigilant.env
+source ${VIGILANTHOME}/lib/fp.sh
+
+#If not prefix given use timestamp
+if [ -z "${2}" ];then
+  
+  saythis "Prefix not provided. Using timestamp for output samplesheet." "warn"
+  sampleSheet=$(rightnow)".samplesheet.csv"
+
+else
+  
+  sampleSheet="${2}.samplesheet.csv"
+
+fi
 
 #create samplesheet
 echo "sample,barcode" > $sampleSheet
@@ -23,7 +37,7 @@ while read line;do
  #If barcode or Sample ID are NOT empty
   if [ -n "${barcode}" ];then
 
- 	 printf "hCoV-19/Colombia/${sampleid},${barcode}\n" >> $sampleSheet
+ 	 printf "${sampleid},${barcode}\n" >> $sampleSheet
   fi
 
 

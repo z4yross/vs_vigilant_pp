@@ -60,3 +60,11 @@ fi
   echo ""
   echo "......................................................"
 }
+
+#Creates a timestamp of right now. 
+function rightnow()
+{
+  local v=$(date +%Y%m%d-%I%M%S)
+  printf $v
+
+}
