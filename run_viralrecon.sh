@@ -93,6 +93,5 @@ sudo ${nfBin} run nf-core/viralrecon -r ${vReconRelease} \
 -c ${customConfig} \
 --sequencing_summary ${sequencingSummary} \
 --outdir ${outDir} \ 
-
-
+-resume
 

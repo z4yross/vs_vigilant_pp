@@ -1,3 +1,7 @@
+2021/09/16
+* Added default "--resume" option in run_viralrecon.sh
+* New script "publish_results.sh" added.  
+
 
 2021/09/15
 * Nexstrain results dir now goes inside results dir.
