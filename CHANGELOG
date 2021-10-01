@@ -1,6 +1,6 @@
 2021/09/16
 * Added default "--resume" option in run_viralrecon.sh
-* New script "publish_results.sh" added.  
+* New script "publis.sh" added.  Still no functional.
 
 
 2021/09/15
