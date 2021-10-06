@@ -330,7 +330,7 @@ do
   # Paste does all the magic. Easy to modify columns position.
   # We have to give the relative path to the file because now we 
   # are into the tmp folder.
- # paste S C V K R I N A D F L  >> ../${reportMainFile}
+  # paste S C V K R I N A D F L  >> ../${reportMainFile}
   paste S R I A C D F L  >> ../${reportMainFile}
   
   #We need to get back one dir up.
