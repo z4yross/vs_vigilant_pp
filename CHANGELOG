@@ -1,3 +1,6 @@
+2021/09/20
+* Modified INS report output, from: SCVKRINADFL to: SRIACDFL
+
 2021/09/16
 * Added default "--resume" option in run_viralrecon.sh
 * New script "publis.sh" added.  Still no functional.
