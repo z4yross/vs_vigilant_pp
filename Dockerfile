@@ -1,79 +1,26 @@
-FROM continuumio/miniconda3:latest
+FROM nextflow/nextflow
+# SHELL ["/bin/bash", "-c"]
 
-SHELL ["/bin/bash", "-c"]
+# RUN apk update && \
+#     apk add sudo shadow
 
-# RUN usermod -u 1000 /home/conda_cache
-# RUN usermod -G staff /home/conda_cache
+# RUN chmod 777 /var/run/docker.sock
+# RUN chmod 777 /var/run/docker.sock
+# RUN echo '%docker ALL=(ALL) ALL' > /etc/sudoers.d/docker
+# RUN addgroup -S docker && adduser -S docker -G docker
+# USER docker
 
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get -y install \
-    # openjdk-11-jre-headless \
-    wget git make && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apk update && apk add git wget bash openjdk11
 
-RUN apt-get update \
-    && apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common \
-    && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
-    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
-    && apt-get update \
-    && apt-get install -y docker-ce docker-ce-cli containerd.io
+# SHELL ["/bin/bash", "-c"]
 
-ENV PATH=$PATH:/app/bin
-ENV CONDA_ALWAYS_YES true
+# # install nextflow wget
+# WORKDIR /home/nextflow
+# RUN wget -qO- https://get.nextflow.io | bash
+# RUN chmod +x nextflow
+# RUN /home/nextflow/nextflow self-update
 
-RUN conda install -c anaconda openjdk
-
-# COPY ./viralrecon/ /home/config/
-
-# install nextflow wget
-WORKDIR /home/nextflow
-RUN wget -qO- https://get.nextflow.io | bash
-RUN chmod +x nextflow
-RUN /home/nextflow/nextflow self-update
-
-# RUN conda update --all
-
-# biocommons conda channels
-RUN conda config --add channels defaults
-RUN conda config --add channels bioconda
-RUN conda config --add channels conda-forge
-# RUN conda config --set allow_conda_downgrades true
-RUN conda config --set channel_priority false
-# RUN conda install --no-channel-priority conda=4.6.14
-# RUN conda config --set channel_priority false
-
-# install pangolin github
-# RUN git clone https://github.com/cov-lineages/pangolin.git /home/pangolin
-# RUN conda env create -f /home/pangolin/environment.yml -p /home/conda_cache/nextflow
-# RUN conda create -n nextflow
-# SHELL ["/home/conda_cache/nextflow/bin/conda", "/bin/bash", "-c"]
-# RUN conda install -c bioconda nextflow
-# RUN conda install -c bioconda -c conda-forge -c defaults pangolin
-
-# RUN conda install -c bioconda -c conda-forge -c defaults pangolin
-
-# RUN /home/conda_cache/nextflow/bin/pip install /home/pangolin
-
-# install gcc
-# RUN conda install pysam
-# RUN conda install -c conda-forge gcc
-# RUN pip install Cython
-# install nanoplot
-# RUN mkdir /home/NanoPlot
-# # RUN wget https://raw.githubusercontent.com/bioconda/bioconda-recipes/master/recipes/nanoplot/meta.yaml -O /home/NanoPlot/environment.yml
-# RUN git clone https://github.com/wdecoster/NanoPlot.git /home/NanoPlot
-# WORKDIR /home/NanoPlot
-# RUN python setup.py install
-# RUN conda install -c bioconda nanoplot
-
-# install mosdepth
-# RUN conda install mosdepth
-
-# SHELL ["conda", "run", "--no-capture-output", "-n", "nextflow", "/bin/bash", "-c"]
-# clone viralrecon pipeline
-RUN git clone https://github.com/nf-core/viralrecon.git /home/viralrecon
+# RUN git clone https://github.com/nf-core/viralrecon.git /home/viralrecon
 WORKDIR /home/context
 
 # set env variables
@@ -85,12 +32,12 @@ ENV OUT_PATH "/storage/out"
 ENV MAX_MEMORY "48GB"
 ENV MAX_CPUS "12"
 
-ENV NXF_CONDA_ENABLED "true"
+# ENV NXF_CONDA_ENABLED "true"
 
 ENV MEDAKA_MODEL="/home/config/r941_min_high_g360_model.hdf5"
-ENV NXF_CONDA_CACHEDIR="/home/conda_cache"
+# ENV NXF_CONDA_CACHEDIR="/home/conda_cache"
 
-CMD /home/nextflow/nextflow run /home/viralrecon/main.nf --input ${SAMPLE_SHEET_PATH} \
+CMD nextflow kuberun nf-core/viralrecon --input ${SAMPLE_SHEET_PATH} \
     -c /home/config/custom.config \
     --platform nanopore \
     --genome 'MN908947.3' \
@@ -101,10 +48,9 @@ CMD /home/nextflow/nextflow run /home/viralrecon/main.nf --input ${SAMPLE_SHEET_
     --outdir ${OUT_PATH} \
     --max_memory ${MAX_MEMORY} \
     --max_cpus ${MAX_CPUS} \
-    -profile conda,docker \
-    -with-conda  \
-    --enable_conda \
-    --skip_mosdepth \
+    -profile docker \
+    # -with-docker \
+    # --skip_mosdepth \
     ${RESUME}
     # --nextclade_dataset false \
     # --nextclade_dataset_tag false
