@@ -1,0 +1,14 @@
+name: mosdepth
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r
+  - r-base
+  - mosdepth
+  - r-optparse
+  - r-ggplot2
+  - bioconductor-complexheatmap
+  - r-viridis
+  - r-tidyverse
