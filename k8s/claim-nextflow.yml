@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: claim-nextflow
+  name: custom-claim-nextflow
 spec:
-  # storageClassName: manual
+  storageClassName: nextflow-storage-class
   accessModes:
     - ReadWriteMany
   resources:
