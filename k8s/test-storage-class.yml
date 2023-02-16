@@ -1,9 +1,0 @@
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: nextflow-storage-class
-provisioner: microk8s.io/hostpath
-reclaimPolicy: Delete
-parameters:
-  pvDir: /run/media/z4yross/datos/Documentos/workspace/fullstack/vs/vs_vigilant_pp/data
-volumeBindingMode: WaitForFirstConsumer

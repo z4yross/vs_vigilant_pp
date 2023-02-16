@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-nextflow-test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: container-vs-vigilant-pp
+      image: z4yross/vs_vigilant_pp
+      env: 
+        - name: SAMPLE_SHEET_PATH
+          value: "/storage/run30.samplesheet.csv"
+        - name: FASTQ_PASS_PATH
+          value: "/storage/fastq_pass"
+        - name: SUMMARY_PATH
+          value: "/storage/sequencing_summary.txt"
+        - name: OUT_PATH
+          value: "/storage/out/"
+        - name: CONFIG_PATH
+          value: "/storage/viralrecon/"
+        - name: WORK_PATH
+          value: "/storage/workspace/"
+        - name: MAX_CPUS
+          value: "8"
+        - name: MAX_MEMORY
+          value: "15GB"
+      resources:
+        limits:
+          cpu: "12"
+          memory: "15Gi"
+        requests:
+          cpu: "500m"
+          memory: "1Gi"
+      volumeMounts:
+        - mountPath: /storage
+          name: data-volume
+  volumes:
+    - name: data-volume
+      persistentVolumeClaim:
+        claimName: claim-nextflow-data

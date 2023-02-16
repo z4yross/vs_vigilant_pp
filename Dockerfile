@@ -1,5 +1,31 @@
-FROM nextflow/nextflow
-# SHELL ["/bin/bash", "-c"]
+FROM ubuntu:latest
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update \
+    && apt-get install -y \
+    wget \
+    git \
+    openjdk-11-jdk \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# set env variables
+ENV WORK_PATH "/storage/workspace/"
+ENV SAMPLE_SHEET_PATH "/storage/sample_sheet.csv"
+ENV FASTQ_PASS_PATH "/storage/fastq_pass/"
+ENV SUMMARY_PATH "/storage/sequencing_summary.txt"
+ENV OUT_PATH "/storage/out"
+ENV NAME "nextflow-test-pod"
+ENV CLAIM_NAME "custom-claim-nextflow"
+ENV CONFIG_PATH "/storage/viralrecon/"
+
+ENV MAX_MEMORY "48GB"
+ENV MAX_CPUS "12"
+
+# ENV NXF_CONDA_ENABLED "true"
+
+ENV MEDAKA_MODEL="${CONFIG_PATH}r941_min_high_g360_model.hdf5"
+# ENV NXF_CONDA_CACHEDIR="/home/conda_cache"
 
 # RUN apk update && \
 #     apk add sudo shadow
@@ -14,31 +40,17 @@ FROM nextflow/nextflow
 
 # SHELL ["/bin/bash", "-c"]
 
-# # install nextflow wget
-# WORKDIR /home/nextflow
-# RUN wget -qO- https://get.nextflow.io | bash
-# RUN chmod +x nextflow
-# RUN /home/nextflow/nextflow self-update
+# install nextflow wget
+WORKDIR /home/nextflow
+RUN wget -qO- https://get.nextflow.io | bash
+RUN chmod +x nextflow
+RUN /home/nextflow/nextflow self-update
 
-# RUN git clone https://github.com/nf-core/viralrecon.git /home/viralrecon
-WORKDIR /home/context
+WORKDIR ${WORK_PATH}
 
-# set env variables
-ENV SAMPLE_SHEET_PATH "/storage/sample_sheet.csv"
-ENV FASTQ_PASS_PATH "/storage/fastq_pass/"
-ENV SUMMARY_PATH "/storage/sequencing_summary.txt"
-ENV OUT_PATH "/storage/out"
-
-ENV MAX_MEMORY "48GB"
-ENV MAX_CPUS "12"
-
-# ENV NXF_CONDA_ENABLED "true"
-
-ENV MEDAKA_MODEL="/home/config/r941_min_high_g360_model.hdf5"
-# ENV NXF_CONDA_CACHEDIR="/home/conda_cache"
-
-CMD nextflow kuberun nf-core/viralrecon --input ${SAMPLE_SHEET_PATH} \
-    -c /home/config/custom.config \
+CMD git clone https://github.com/nf-core/viralrecon.git ${WORK_PATH}viralrecon; \
+    /home/nextflow/nextflow run ${WORK_PATH}viralrecon/main.nf --input ${SAMPLE_SHEET_PATH} \
+    -c "${CONFIG_PATH}custom.config" \
     --platform nanopore \
     --genome 'MN908947.3' \
     --primer_set_version 3 \
@@ -49,12 +61,7 @@ CMD nextflow kuberun nf-core/viralrecon --input ${SAMPLE_SHEET_PATH} \
     --max_memory ${MAX_MEMORY} \
     --max_cpus ${MAX_CPUS} \
     -profile docker \
-    # -with-docker \
-    # --skip_mosdepth \
     ${RESUME}
-    # --nextclade_dataset false \
-    # --nextclade_dataset_tag false
-    # -profile docker
 
 
 # # Install dependencies
